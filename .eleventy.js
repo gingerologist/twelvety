@@ -1,5 +1,6 @@
 module.exports = function (eleventyConfig) {
   return {
+    pathPrefix: '/twelvety/',
     dir: {
       input: 'src',
       includes: '_includes',
