@@ -3,4 +3,5 @@ title: Hello World
 layout: "base.njk"
 ---
 
-Hello Jamstack fam!
+Hello Jamstack fam! But wait, woh is Jamstack?
+
