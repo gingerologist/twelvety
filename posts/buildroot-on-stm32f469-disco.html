@@ -10,7 +10,56 @@
     <h1>Buildroot on STM32F469 DISCO</h1>
   </header>
   <main>
-    <h1>Comparison of Buildroot Configs</h1>
+    <h1>Board and Processor</h1>
+<p>stm32f469 discovery kit (<a href="https://www.st.com/en/evaluation-tools/32f469idiscovery.html">32F469IDISCOVERY</a>) has STM32F469NIH6 on board, featuring 2Mbytes of on-chip flash and 324Kbytes on-chip sram in BGA216 package.
+There are also 16MBytes sdram and 16MBytes qspi nor flash on board.</p>
+<h2>memory mapping</h2>
+<p>According to datasheet (for fmc and quad spi, see figure 21 and table 13 in chapter 4 memory mapping of datasheet, fmc memroy banks is explained in figure 37 in reference manual).</p>
+<table>
+<thead>
+<tr>
+<th>memory device</th>
+<th>addresses</th>
+<th>size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>on-chip sram</td>
+<td>0x2000 0000 - 0x2002 ffff</td>
+<td>320K</td>
+</tr>
+<tr>
+<td>on-chip flash</td>
+<td>0x0800 0000 - 0x080f ffff</td>
+<td>2M</td>
+</tr>
+<tr>
+<td>on-board sdram (bank 1)</td>
+<td>0xC000 0000 -</td>
+<td>16MB</td>
+</tr>
+<tr>
+<td>quadspi flash (bank 1)</td>
+<td>0x9000 0000 -</td>
+<td>16MB</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>for fmc, bank 1 is NOR/PSRAM/SRAM, bank 2 reserved, bank 3 is NAND, bank 4 is reserved, bank 5 is sdram bank 1,
+bank 6 is sdram bank 2; for disco board, the bank number can be checked in ide (ioc).</p>
+</blockquote>
+<p>In flash linker file</p>
+<pre><code>/* Memories definition */
+MEMORY
+{
+  CCMRAM  (xrw)   : ORIGIN = 0x10000000,   LENGTH =   64K
+  RAM     (xrw)   : ORIGIN = 0x20000000,   LENGTH =  320K
+  FLASH   (xr )   : ORIGIN = 0x08000000,   LENGTH = 2048K
+}
+</code></pre>
+<h1>Comparison of Buildroot Configs</h1>
 <h2>tools and docs</h2>
 <pre><code>$ ll board/stmicroelectronics/stm32f469-disco/
 total 36
