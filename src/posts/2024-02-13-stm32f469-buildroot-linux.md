@@ -4,6 +4,37 @@ date: 2024-02-13
 permalink: "posts/buildroot-on-stm32f469-disco.html"
 ---
 
+# Board and Processor
+
+stm32f469 discovery kit ([32F469IDISCOVERY](https://www.st.com/en/evaluation-tools/32f469idiscovery.html)) has STM32F469NIH6 on board, featuring 2Mbytes of on-chip flash and 324Kbytes on-chip sram in BGA216 package.
+There are also 16MBytes sdram and 16MBytes qspi nor flash on board.
+
+## memory mapping
+
+According to datasheet (for fmc and quad spi, see figure 21 and table 13 in chapter 4 memory mapping of datasheet, fmc memroy banks is explained in figure 37 in reference manual).
+
+| memory device             | addresses                 | size |
+|---------------------------|---------------------------|------|
+| on-chip sram              | 0x2000 0000 - 0x2002 ffff | 320K |
+| on-chip flash             | 0x0800 0000 - 0x080f ffff | 2M   |
+| on-board sdram (bank 1)   | 0xC000 0000 -             | 16MB |
+| quadspi flash (bank 1)    | 0x9000 0000 -             | 16MB |
+
+
+> for fmc, bank 1 is NOR/PSRAM/SRAM, bank 2 reserved, bank 3 is NAND, bank 4 is reserved, bank 5 is sdram bank 1,
+> bank 6 is sdram bank 2; for disco board, the bank number can be checked in ide (ioc).
+
+In flash linker file
+```
+/* Memories definition */
+MEMORY
+{
+  CCMRAM  (xrw)   : ORIGIN = 0x10000000,   LENGTH =   64K
+  RAM     (xrw)   : ORIGIN = 0x20000000,   LENGTH =  320K
+  FLASH   (xr )   : ORIGIN = 0x08000000,   LENGTH = 2048K
+}
+```
+
 # Comparison of Buildroot Configs
 
 ## tools and docs
@@ -127,6 +158,8 @@ XIP_KERNEL
 XIP_DEFLATED_DATA (Boot options -> Store kernel .data section compressed in ROM)
 XIP_PHYS_ADDR [=0x0800C000]     -> XIP Kernel Physical Location
 ```
+
+
 
 ### kernel image
 
