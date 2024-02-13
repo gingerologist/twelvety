@@ -10,7 +10,119 @@
     <h1>Buildroot on STM32F469 DISCO</h1>
   </header>
   <main>
-    <p>code</p>
+    <h1>Comparison of Buildroot Configs</h1>
+<h2>tools and docs</h2>
+<pre><code>$ ll board/stmicroelectronics/stm32f469-disco/
+total 36
+drwxrwxr-x 1 ma ma  236 Feb 13 14:19 ./
+drwxrwxr-x 1 ma ma  162 Jan 15 18:21 ../
+-rw-rw-r-- 1 ma ma  206 Jan 15 18:21 extlinux.conf
+-rwxrwxr-x 1 ma ma  415 Jan 15 18:21 flash_sd.sh*
+-rwxrwxr-x 1 ma ma  583 Jan 15 18:21 flash_xip.sh*
+-rw-rw-r-- 1 ma ma  303 Jan 15 18:21 genimage.cfg
+-rw-rw-r-- 1 ma ma  164 Jan 15 18:21 linux-sd.fragment
+-rw-rw-r-- 1 ma ma 3333 Jan 15 18:21 linux-xip.config
+-rwxrwxr-x 1 ma ma  118 Jan 15 18:21 post-build.sh*
+-rw-rw-r-- 1 ma ma 1226 Jan 15 18:21 readme.txt
+-rw-rw-r-- 1 ma ma  559 Jan 15 18:21 readme_xip.txt
+</code></pre>
+<h2>sd config</h2>
+<ul>
+<li>kernel version 5.14.12</li>
+<li>kernel config
+<ul>
+<li>stm32_defconfig (<code>output/build/linux-5.14.12/arch/arm/configs/stm32_defconfig</code>)</li>
+<li><code>output/build/linux-5.14.12/arch/arm/configs/dram_0x00000000.config</code> set dram base address.</li>
+<li><code>board/stmicroelectronics/stm32f469-disco/linux-sd.fragment</code> see below</li>
+</ul>
+</li>
+<li>output zImage</li>
+<li>ext2 rootfs, 32MB</li>
+<li>u-boot</li>
+</ul>
+<h3><code>configs/stm32f469_disco_sd_defconfig</code></h3>
+<pre><code>BR2_arm=y
+BR2_cortex_m4=y
+BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_5_14=y
+BR2_ROOTFS_POST_BUILD_SCRIPT=&quot;board/stmicroelectronics/common/stm32f4xx/stm32-post-build.sh board/stmicroelectronics/stm32f469-disco/post-build.sh&quot;
+BR2_ROOTFS_POST_IMAGE_SCRIPT=&quot;support/scripts/genimage.sh&quot;
+BR2_ROOTFS_POST_SCRIPT_ARGS=&quot;-c board/stmicroelectronics/stm32f469-disco/genimage.cfg&quot;
+BR2_LINUX_KERNEL=y
+BR2_LINUX_KERNEL_CUSTOM_VERSION=y
+BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE=&quot;5.14.12&quot;
+BR2_LINUX_KERNEL_DEFCONFIG=&quot;stm32&quot;
+BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES=&quot;$(LINUX_DIR)/arch/arm/configs/dram_0x00000000.config board/stmicroelectronics/stm32f469-disco/linux-sd.fragment&quot;
+BR2_LINUX_KERNEL_IMAGE_TARGET_CUSTOM=y
+BR2_LINUX_KERNEL_IMAGE_TARGET_NAME=&quot;zImage&quot;
+BR2_LINUX_KERNEL_DTS_SUPPORT=y
+BR2_LINUX_KERNEL_INTREE_DTS_NAME=&quot;stm32f469-disco&quot;
+BR2_PACKAGE_BUSYBOX_CONFIG=&quot;package/busybox/busybox-minimal.config&quot;
+BR2_PACKAGE_BUSYBOX_CONFIG_FRAGMENT_FILES=&quot;board/stmicroelectronics/common/stm32f4xx/busybox.fragment&quot;
+# BR2_PACKAGE_IFUPDOWN_SCRIPTS is not set
+BR2_TARGET_ROOTFS_EXT2=y
+BR2_TARGET_ROOTFS_EXT2_SIZE=&quot;32M&quot;
+# BR2_TARGET_ROOTFS_TAR is not set
+BR2_TARGET_UBOOT=y
+BR2_TARGET_UBOOT_BUILD_SYSTEM_KCONFIG=y
+BR2_TARGET_UBOOT_CUSTOM_VERSION=y
+BR2_TARGET_UBOOT_CUSTOM_VERSION_VALUE=&quot;2023.04&quot;
+BR2_TARGET_UBOOT_BOARD_DEFCONFIG=&quot;stm32f469-discovery&quot;
+BR2_TARGET_UBOOT_NEEDS_OPENSSL=y
+BR2_PACKAGE_HOST_DOSFSTOOLS=y
+BR2_PACKAGE_HOST_GENIMAGE=y
+BR2_PACKAGE_HOST_MTOOLS=y
+BR2_PACKAGE_HOST_OPENOCD=y
+</code></pre>
+<h3><code>board/stmicroelectronics/stm32f469-disco/linux-sd.fragment</code></h3>
+<pre><code># CONFIG_XIP_KERNEL is not set
+CONFIG_DRM=y
+CONFIG_DRM_STM=y
+CONFIG_DRM_STM_DSI=y
+CONFIG_DRM_PANEL_ORISETECH_OTM8009A=y
+CONFIG_FB=y
+CONFIG_BACKLIGHT_CLASS_DEVICE=y
+</code></pre>
+<h2>xip config</h2>
+<ul>
+<li>kernel version 5.15.6</li>
+<li>dedicated kernel config <code>board/stmicroelectronics/stm32f469-disco/linux-xip.config</code></li>
+<li>output xipImage</li>
+<li>initramfs rootfs</li>
+<li>afboot</li>
+</ul>
+<h3><code>configs/stm32f469_disco_sd_defconfig</code></h3>
+<pre><code>BR2_arm=y
+BR2_cortex_m4=y
+BR2_KERNEL_HEADERS_5_15=y
+# BR2_UCLIBC_INSTALL_UTILS is not set
+BR2_ENABLE_LTO=y
+BR2_ROOTFS_POST_BUILD_SCRIPT=&quot;board/stmicroelectronics/common/stm32f4xx/stm32-post-build.sh&quot;
+BR2_LINUX_KERNEL=y
+BR2_LINUX_KERNEL_CUSTOM_VERSION=y
+BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE=&quot;5.15.6&quot;
+BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
+BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE=&quot;board/stmicroelectronics/stm32f469-disco/linux-xip.config&quot;
+BR2_LINUX_KERNEL_IMAGE_TARGET_CUSTOM=y
+BR2_LINUX_KERNEL_IMAGE_TARGET_NAME=&quot;xipImage&quot;
+BR2_LINUX_KERNEL_DTS_SUPPORT=y
+BR2_LINUX_KERNEL_INTREE_DTS_NAME=&quot;stm32f469-disco&quot;
+BR2_PACKAGE_BUSYBOX_CONFIG=&quot;package/busybox/busybox-minimal.config&quot;
+BR2_PACKAGE_BUSYBOX_CONFIG_FRAGMENT_FILES=&quot;board/stmicroelectronics/common/stm32f4xx/busybox.fragment&quot;
+# BR2_PACKAGE_IFUPDOWN_SCRIPTS is not set
+BR2_TARGET_ROOTFS_INITRAMFS=y
+# BR2_TARGET_ROOTFS_TAR is not set
+BR2_TARGET_AFBOOT_STM32=y
+BR2_TARGET_AFBOOT_STM32_KERNEL_ADDR=0x0800C000
+BR2_PACKAGE_HOST_OPENOCD=y
+</code></pre>
+<h3><code>make linux-menuconfig</code></h3>
+<p>The following xip related options are set</p>
+<pre><code>XIP_KERNEL
+XIP_DEFLATED_DATA (Boot options -&gt; Store kernel .data section compressed in ROM)
+XIP_PHYS_ADDR [=0x0800C000]     -&gt; XIP Kernel Physical Location
+</code></pre>
+<h3>kernel image</h3>
+<p>According to build log, the kernel has been built twice. One without initramfs and the other with. The final xipImage has 1,659,451 bytes.</p>
 
   </main>
 </body>
