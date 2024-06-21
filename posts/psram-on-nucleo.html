@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test PSRAM on stm32f7/h7 nucleo 144 board</title>
+</head>
+<body>
+  <header>
+    <h1>Test PSRAM on stm32f7/h7 nucleo 144 board</h1>
+  </header>
+  <main>
+    <h1>Board Selection</h1>
+<p>Nucleo 144 Board has several variants. ST provides a data brief (DB3171) for the series.</p>
+<p>https://www.st.com/en/evaluation-tools/stm32-nucleo-boards/documentation.html</p>
+<p>For example, nucleo-h743zi is listed as MB1137 or MB1364 (v2) in the document. Though on the website, this board is listed as NRND. 753 board is recommended as replacement.</p>
+<p>In a <a href="https://electronics.stackexchange.com/questions/631756/freeing-nucleo-stm32-board-pins-for-fmc-interface-use">stackoverflow post</a> and a <a href="https://community.st.com/t5/stm32-mcus-products/how-to-free-nucleo-stm32-board-pins-for-fmc-interface-use/td-p/122982">st forum discussion</a>, the same person asked a related question: which pins must be freed from nucleo board for fmc interface. This is because the memory chip connected to fmc interface usually requires a lot of pins.</p>
+<p><a href="https://item.szlcsc.com/1440440.html">IS66WVE4M16EBLL-70BLI on lcsc</a> requires 20 address lines and 16 data lines, plus several other control signals.</p>
+<p>In this <a href="https://vivonomicon.com/2020/07/26/bare-metal-stm32-programming-part-11-using-external-memories/">bare metal tutorial</a>, <a href="https://www.st.com/en/evaluation-tools/32f723ediscovery.html">32F723EDISCOVERY</a> is used for demonstration. This board is equipped with a psram chip in similar series. Also, as pointed in the tutorial, this psram chip does not use CLK, NADV (NL, latch), or NWAIT signal. So in stm32cubeide configuration, Clock and Wait are disabled and Address Valid unchecked, leaving those pins unused.</p>
+<p>Check the board schematics for PE1, PD8/9/10 and remove problematic components. The FMC is available.</p>
+<h2>Play (Dry Run) in CubeIDE</h2>
+<p>Create a new project and choose Nucloe-H753ZI as target board.</p>
+<ol>
+<li>disable usart3, change PD9/PD8 to FMC_D14/D13 respectively.</li>
+<li>in GPIO configuration, PD10 listed as USB_OTG_FS_PWRN_EN. Unpin PD10 then change it to FMC_D15.</li>
+<li>in GPIO configuration, PE1 listed as LD2 [Yellow Led]. Unpin PE1 then change it to FMC_NBL1.</li>
+<li>Now goto FMC, select first entry, Chip Select -&gt; NE1, Memory type -&gt; PSRAM, address 20bit (for 8MByte/64MBit), Data 16bits, check 16-bit byte enable. Then all GPIO required are listed in FMC-&gt;GPIO Settings.</li>
+</ol>
+<p>One more thing:</p>
+<p>In QUADSPI configuration. Only Bank1 with Quad SPI Lines are available. Dual bank is not possible for this chip.</p>
+
+  </main>
+</body>
+</html>
