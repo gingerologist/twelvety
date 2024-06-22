@@ -16,7 +16,6 @@ Useful tutorials:
 
 - [Hosting Eleventy on GitHub Pages](https://quinndombrowski.com/blog/2022/05/07/hosting-eleventy-on-github-pages/)
 - [A Reference Project](https://github.com/quinnanya/quinnanya.github.io/blob/main/.github/workflows/build.yml)
-- 
 
 Official Docs on Must-haves:
 
