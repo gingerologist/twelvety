@@ -1,7 +1,7 @@
 ---
 title: Hands on STEVAL-SPIN3201 and MCSDK 6
 date: '2024-06-23T04:10:00+08:00'
-permalink: "posts/hands-on-steval-spin3201-and-mcsdk6
+permalink: "posts/hands-on-steval-spin3201-and-mcsdk6.html"
 ---
 
 
