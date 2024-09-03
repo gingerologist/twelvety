@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hands on STEVAL-SPIN3201 and MCSDK 6</title>
+</head>
+<body>
+  <header>
+    <h1>Hands on STEVAL-SPIN3201 and MCSDK 6</h1>
+  </header>
+  <main>
+    <h1>Hands- on STEVAL-SPIN3201 and MCSDK6</h1>
+<p>MCSDK (v6 preferred), STM32CubeMX, and STM32CubeIDE are required. Only Windows is supported by MCSDK. So the first step is to install all three software suite on Windows. MCSDK will bring up STM32CubeMX directly to generate a boilerplate project for STM32CubeIDE. Don't know whether the project could be copied to Linux and do modifications and debugging thereafter. Should be tried later.</p>
+<p>There are tons of settings and terms in MCSDK to be clarified. And first of all, I need to figure out the meaning of all parameters for motor.</p>
+<blockquote>
+<p>A Bug Fix</p>
+<p>There is an error when generating the source code. Something like &quot;WARNING: Could not open/create prefs root node Software\JavaSoft\Prefs...&quot;, similar to a bug report in an irrelevant project (https://github.com/julienvollering/MIAmaxent/issues/1).</p>
+<p>The solution</p>
+<p>It seems that the required key, SOFTWARE/JavaSoft/Prefs is properly created under 'HKEY_CURRENT_USER' instead of 'HKEY_LOCAL_MACHINE'. Creating this key will solve the problem. The reason may be &quot;current user&quot; instead of &quot;everybody&quot; is chosen when installing CubeMX.</p>
+</blockquote>
+
+  </main>
+</body>
+</html>

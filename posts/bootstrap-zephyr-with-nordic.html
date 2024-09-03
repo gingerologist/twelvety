@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bootstrap Zephyr with Nordic</title>
+</head>
+<body>
+  <header>
+    <h1>Bootstrap Zephyr with Nordic</h1>
+  </header>
+  <main>
+    <h1>Bootstrap Zephyr with Nordic</h1>
+<p>Nordic提供了nRF Connect SDK（NCS），其中包含Nordic官方剪裁和维护的一个Zephyr系统子集，加上Nordic自己提供的诸多工具，库，项目模板和示例代码等。</p>
+<p>使用NCS和使用vanilla Zephyr的区别参见：www.youtube.com/watch?v=9XHcp_JOLbo</p>
+<h2>Quick Notes</h2>
+<p>因为GFW的原因，两种方式安装都不顺利，有两个办法解决。</p>
+<p>如果本地git从github上使用ssh下载是稳定的，但https不行，可以在git的设置文件（<code>~/.gitconfig</code>）里添加：</p>
+<pre><code>[url &quot;ssh://git@github.com/&quot;]
+	insteadOf = https://github.com/
+</code></pre>
+<p>这样修改后，west update可以顺利完成下载安装。该方法对在nRF Connect for VS Code里安装toolchain无效。安装toolchain的方法入下：</p>
+<p>on remote server:</p>
+<p>download nrfutil according to official doc  https://docs.nordicsemi.com/bundle/nrfutil/page/guides/installing.html</p>
+<p>run nrfutil and install toolchain manager</p>
+<p>using nrfutil toolchain-manager install --ncs-version v2.6.1 to install toolchain on remote server</p>
+<p>on local machine</p>
+<p>using rsync to pull all files to local folder, say:</p>
+<pre><code>cd ~/ncs
+rsync -a root@xx.xx.xx.xx:/root/ncs/toolchains/ toolchains
+</code></pre>
+<h2>West</h2>
+<p>https://docs.zephyrproject.org/latest/index.html</p>
+<p>'Developing with Zephyr' -&gt; 'Getting Started Guide'</p>
+<p>There are two ways to install <code>West</code>. Using virtual environment is preferred.</p>
+<p>For ncs, West is included in toolchain. <code>nrfutil toolchain-manager launch --shell</code> will set up a python environment with West.</p>
+
+  </main>
+</body>
+</html>
